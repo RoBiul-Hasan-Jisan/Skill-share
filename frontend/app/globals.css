@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 220 20% 97%;
+  --surface: 0 0% 100%;
+  --surface-2: 220 18% 95%;
+  --border: 220 15% 89%;
+  --text-primary: 222 30% 12%;
+  --text-secondary: 220 10% 40%;
+  --text-muted: 220 9% 58%;
+  --accent: #4F46E5;
+  --accent-2: #0EA5A6;
+  --accent-fg: #ffffff;
+  --shadow-color: 222 30% 20%;
+}
+
+.dark {
+  --bg: 222 26% 8%;
+  --surface: 222 22% 11%;
+  --surface-2: 222 18% 15%;
+  --border: 222 16% 20%;
+  --text-primary: 220 25% 96%;
+  --text-secondary: 220 10% 70%;
+  --text-muted: 220 8% 48%;
+  --accent: #6366F1;
+  --accent-2: #2DD4BF;
+  --accent-fg: #ffffff;
+  --shadow-color: 222 60% 2%;
+}
+
+* {
+  @apply transition-colors duration-150;
+}
+
+body {
+  font-family: var(--font-inter-tight), sans-serif;
+  @apply bg-bg text-text-primary antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-inter-tight), sans-serif;
+  letter-spacing: -0.02em;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-surface;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-surface-2 rounded-full;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--surface)) 25%,
+    hsl(var(--surface-2)) 50%,
+    hsl(var(--surface)) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.gradient-text {
+  background-image: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-accent {
+  background-image: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+.shadow-soft {
+  box-shadow: 0 1px 2px hsl(var(--shadow-color) / 0.06), 0 8px 24px -12px hsl(var(--shadow-color) / 0.18);
+}
+
+.shadow-soft-lg {
+  box-shadow: 0 4px 12px hsl(var(--shadow-color) / 0.08), 0 20px 40px -16px hsl(var(--shadow-color) / 0.28);
+}

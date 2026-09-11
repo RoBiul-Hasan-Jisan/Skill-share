@@ -1,52 +1,71 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class',
-  content: ['./app/**/*.{js,jsx}', './components/**/*.{js,jsx}'],
+  darkMode: "class",
+  content: ["./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        bg: 'hsl(var(--bg))',
-        surface: 'hsl(var(--surface))',
-        'surface-2': 'hsl(var(--surface-2))',
-        border: 'hsl(var(--border))',
-        'text-primary': 'hsl(var(--text-primary))',
-        'text-secondary': 'hsl(var(--text-secondary))',
-        'text-muted': 'hsl(var(--text-muted))',
-        accent: 'var(--accent)',
-        'accent-2': 'var(--accent-2)',
-        'accent-fg': 'var(--accent-fg)',
+        // Cool neutral slate — professional dark SaaS surface scale (Linear/Stripe-style),
+        // not warm, not pure black.
+        ink: {
+          950: "#0a0c10",
+          900: "#0e1116",
+          800: "#12161c",
+          700: "#181d25",
+          600: "#1f2530",
+          500: "#28303c",
+        },
+        // Single brand accent: blue → indigo. Restrained, cool, corporate — kept the
+        // "neon" key names so every component already using bg-neon-grad /
+        // text-neon-cyan / etc. re-themes automatically from just these hex values.
+        neon: {
+          cyan: "#3b82f6", // blue-500 (primary)
+          blue: "#6366f1", // indigo-500 (gradient partner)
+          teal: "#0ea5e9", // sky-500 — ScoreRing "great" tier
+          lime: "#10b981", // emerald-500 — success / available
+          magenta: "#f43f5e", // rose-500 — alerts / danger
+        },
+        line: "rgba(255,255,255,0.05)",
       },
       fontFamily: {
-        sans: ['var(--font-inter-tight)', 'sans-serif'],
+        display: ['"Clash Display"', "Sora", "sans-serif"],
+        sans: ['"Geist"', "system-ui", "sans-serif"],
+        mono: ['"Geist Mono"', '"JetBrains Mono"', "monospace"],
       },
-      borderRadius: {
-        DEFAULT: '8px',
-        md: '8px',
-        lg: '10px',
-        xl: '14px',
-        '2xl': '18px',
+      backgroundImage: {
+        // Blue → indigo only
+        "neon-grad": "linear-gradient(110deg,#3b82f6 0%,#6366f1 100%)",
+        "neon-soft": "linear-gradient(135deg,rgba(59,130,246,0.08),rgba(99,102,241,0.06))",
+        // Very subtle dot grid
+        grid: "radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px)",
       },
-      animation: {
-        'fade-up': 'fadeUp 0.3s ease-out',
-        'fade-in': 'fadeIn 0.2s ease-out',
-        'slide-in': 'slideIn 0.25s ease-out',
-        'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
+      boxShadow: {
+        glow: "0 0 0 1px rgba(59,130,246,0.1), 0 0 24px -4px rgba(99,102,241,0.2)",
+        "glow-sm": "0 0 0 1px rgba(59,130,246,0.08), 0 0 16px -6px rgba(99,102,241,0.15)",
+        "glow-blue": "0 0 0 1px rgba(99,102,241,0.12), 0 0 32px -8px rgba(99,102,241,0.25)",
+        card: "0 1px 0 rgba(255,255,255,0.02) inset, 0 20px 60px -20px rgba(0,0,0,1)",
+        "card-hover": "0 1px 0 rgba(255,255,255,0.03) inset, 0 24px 80px -16px rgba(0,0,0,1)",
       },
       keyframes: {
-        fadeUp: {
-          '0%': { opacity: 0, transform: 'translateY(8px)' },
-          '100%': { opacity: 1, transform: 'translateY(0)' },
+        float: { "0%,100%": { transform: "translateY(0)" }, "50%": { transform: "translateY(-8px)" } },
+        shimmer: { "100%": { transform: "translateX(100%)" } },
+        "fade-up": {
+          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        fadeIn: {
-          '0%': { opacity: 0 },
-          '100%': { opacity: 1 },
+        "pulse-ring": {
+          "0%": { boxShadow: "0 0 0 0 rgba(99,102,241,0.35)" },
+          "70%": { boxShadow: "0 0 0 8px rgba(99,102,241,0)" },
+          "100%": { boxShadow: "0 0 0 0 rgba(99,102,241,0)" },
         },
-        slideIn: {
-          '0%': { transform: 'translateX(-8px)', opacity: 0 },
-          '100%': { transform: 'translateX(0)', opacity: 1 },
-        },
+      },
+      animation: {
+        float: "float 6s ease-in-out infinite",
+        shimmer: "shimmer 1.6s infinite",
+        "fade-up": "fade-up 0.5s ease forwards",
+        "pulse-ring": "pulse-ring 2.4s infinite",
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
-}
+  plugins: [],
+};

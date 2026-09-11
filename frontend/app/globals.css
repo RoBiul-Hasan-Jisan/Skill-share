@@ -2,96 +2,329 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg: 220 20% 97%;
-  --surface: 0 0% 100%;
-  --surface-2: 220 18% 95%;
-  --border: 220 15% 89%;
-  --text-primary: 222 30% 12%;
-  --text-secondary: 220 10% 40%;
-  --text-muted: 220 9% 58%;
-  --accent: #4F46E5;
-  --accent-2: #0EA5A6;
-  --accent-fg: #ffffff;
-  --shadow-color: 222 30% 20%;
-}
+@layer base {
+  :root { color-scheme: dark; }
+  html.dark { color-scheme: dark; }
+  html:not(.dark) { color-scheme: light; }
 
-.dark {
-  --bg: 222 26% 8%;
-  --surface: 222 22% 11%;
-  --surface-2: 222 18% 15%;
-  --border: 222 16% 20%;
-  --text-primary: 220 25% 96%;
-  --text-secondary: 220 10% 70%;
-  --text-muted: 220 8% 48%;
-  --accent: #6366F1;
-  --accent-2: #2DD4BF;
-  --accent-fg: #ffffff;
-  --shadow-color: 222 60% 2%;
-}
+  html { scroll-behavior: smooth; }
 
-* {
-  @apply transition-colors duration-150;
-}
-
-body {
-  font-family: var(--font-inter-tight), sans-serif;
-  @apply bg-bg text-text-primary antialiased;
-}
-
-h1, h2, h3, h4 {
-  font-family: var(--font-inter-tight), sans-serif;
-  letter-spacing: -0.02em;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-surface;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-surface-2 rounded-full;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
+  body {
+    @apply font-sans antialiased;
+    background-color: #000000;
+    color: rgba(255,255,255,0.82);
+    min-height: 100vh;
   }
-  100% {
-    background-position: 200% 0;
+
+  ::selection { background: rgba(99, 102, 241, 0.2); color: #fff; }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.3);
   }
 }
 
-.shimmer {
-  background: linear-gradient(
-    90deg,
-    hsl(var(--surface)) 25%,
-    hsl(var(--surface-2)) 50%,
-    hsl(var(--surface)) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+@layer components {
+  /* ── Glass surface — premium matte ── */
+  .glass {
+    border-radius: 1rem;
+    backdrop-filter: blur(24px) saturate(1.2);
+    background: rgba(255, 255, 255, 0.024);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.025) inset,
+      0 24px 64px -20px rgba(0,0,0,1);
+  }
+  .glass-hover {
+    @apply transition-all duration-300;
+  }
+  .glass-hover:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* ── Gradient text — cyan → blue ── */
+  .text-grad {
+    background: linear-gradient(110deg, #3b82f6 0%, #6366f1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Hairline fading divider ── */
+  .hairline {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
+  }
+
+  /* ── Glow border via pseudo element ── */
+  .glow-border {
+    position: relative;
+  }
+  .glow-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(110deg, #3b82f6, #6366f1);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  /* ── Section divider ── */
+  .section-line {
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.055);
+  }
 }
 
-.gradient-text {
-  background-image: linear-gradient(90deg, var(--accent), var(--accent-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* ── Skeleton shimmer ── */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 0.5rem;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer { 100% { transform: translateX(100%); } }
+
+/* ════════════════════════════════════════════════════════
+   LIGHT MODE
+   ════════════════════════════════════════════════════════ */
+html:not(.dark) body {
+  background-color: #f0f0f3;
+  color: #111111;
 }
 
-.gradient-accent {
-  background-image: linear-gradient(135deg, var(--accent), var(--accent-2));
+/* Aurora/background in light mode */
+html:not(.dark) .pointer-events-none.fixed.-z-10 {
+  opacity: 0.10;
 }
 
-.shadow-soft {
-  box-shadow: 0 1px 2px hsl(var(--shadow-color) / 0.06), 0 8px 24px -12px hsl(var(--shadow-color) / 0.18);
+/* Glass cards in light mode */
+html:not(.dark) .glass {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(0, 0, 0, 0.07);
+  box-shadow:
+    0 1px 1px rgba(0,0,0,0.03),
+    0 4px 20px rgba(0,0,0,0.06),
+    0 1px 0 rgba(255,255,255,0.95) inset;
+  backdrop-filter: blur(20px) saturate(1.6);
+}
+html:not(.dark) .glass-hover:hover {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(0, 0, 0, 0.10);
 }
 
-.shadow-soft-lg {
-  box-shadow: 0 4px 12px hsl(var(--shadow-color) / 0.08), 0 20px 40px -16px hsl(var(--shadow-color) / 0.28);
+/* Dividers */
+html:not(.dark) .hairline {
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
+}
+html:not(.dark) .section-line {
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+/* Scrollbar */
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.10);
+}
+html:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.3);
+}
+
+/* Skeleton */
+html:not(.dark) .skeleton {
+  background: rgba(0, 0, 0, 0.05);
+}
+html:not(.dark) .skeleton::after {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+}
+
+/* ── Generic fallback for any text/bg/border-white opacity variant not
+   explicitly enumerated below (bare, /5, /8, /15, /20, /25, /30, /80, etc.).
+   Placed first so the more specific, hand-tuned rules further down still
+   win for the values they cover — this just catches everything else,
+   including any new variant added later. ── */
+html:not(.dark) [class~="text-white"],
+html:not(.dark) [class*="text-white/"] {
+  color: rgba(10,10,10,0.75);
+}
+html:not(.dark) [class*="border-white/"] {
+  border-color: rgba(0,0,0,0.10);
+}
+
+/* ── Light mode text overrides ── */
+html:not(.dark) .text-white          { color: rgba(10,10,10,0.90) !important; }
+html:not(.dark) .text-white\/90      { color: rgba(10,10,10,0.85) !important; }
+html:not(.dark) .text-white\/80      { color: rgba(10,10,10,0.80) !important; }
+html:not(.dark) .text-white\/75      { color: rgba(10,10,10,0.75) !important; }
+html:not(.dark) .text-white\/70      { color: rgba(10,10,10,0.70) !important; }
+html:not(.dark) .text-white\/65      { color: rgba(10,10,10,0.65) !important; }
+html:not(.dark) .text-white\/60      { color: rgba(10,10,10,0.60) !important; }
+html:not(.dark) .text-white\/55      { color: rgba(10,10,10,0.55) !important; }
+html:not(.dark) .text-white\/50      { color: rgba(10,10,10,0.50) !important; }
+html:not(.dark) .text-white\/45      { color: rgba(10,10,10,0.45) !important; }
+html:not(.dark) .text-white\/40      { color: rgba(10,10,10,0.42) !important; }
+html:not(.dark) .text-white\/35      { color: rgba(10,10,10,0.38) !important; }
+html:not(.dark) .text-white\/30      { color: rgba(10,10,10,0.34) !important; }
+html:not(.dark) .text-white\/25      { color: rgba(10,10,10,0.28) !important; }
+html:not(.dark) .text-white\/20      { color: rgba(10,10,10,0.24) !important; }
+html:not(.dark) .text-white\/15      { color: rgba(10,10,10,0.19) !important; }
+html:not(.dark) .text-white\/10      { color: rgba(10,10,10,0.14) !important; }
+html:not(.dark) .text-slate-100      { color: rgba(10,10,10,0.85) !important; }
+html:not(.dark) .text-slate-200      { color: rgba(10,10,10,0.75) !important; }
+html:not(.dark) .text-slate-300      { color: rgba(10,10,10,0.62) !important; }
+html:not(.dark) .text-slate-400      { color: rgba(10,10,10,0.50) !important; }
+html:not(.dark) .text-slate-500      { color: rgba(10,10,10,0.42) !important; }
+html:not(.dark) .text-slate-600      { color: rgba(10,10,10,0.34) !important; }
+
+/* ── Light mode background overrides ── */
+html:not(.dark) .bg-white\/\[0\.018\],
+html:not(.dark) .bg-white\/\[0\.02\],
+html:not(.dark) .bg-white\/\[0\.025\],
+html:not(.dark) .bg-white\/\[0\.03\] {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+html:not(.dark) .bg-white\/\[0\.04\],
+html:not(.dark) .bg-white\/\[0\.05\],
+html:not(.dark) .bg-white\/\[0\.06\],
+html:not(.dark) .bg-white\/\[0\.07\],
+html:not(.dark) .bg-white\/\[0\.08\] {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+html:not(.dark) .bg-white\/5         { background-color: rgba(0,0,0,0.03) !important; }
+html:not(.dark) .bg-white\/10        { background-color: rgba(0,0,0,0.06) !important; }
+html:not(.dark) .bg-white\/15        { background-color: rgba(0,0,0,0.08) !important; }
+html:not(.dark) .bg-white\/25        { background-color: rgba(0,0,0,0.12) !important; }
+html:not(.dark) .bg-white\/80        { background-color: rgba(255,255,255,0.9) !important; }
+html:not(.dark) .bg-black\/50        { background-color: rgba(0,0,0,0.35) !important; }
+
+/* Dark hard-coded bg colours used in modals/context menus/selects */
+html:not(.dark) .bg-\[\#0a0a0a\]    { background-color: #f5f5f8 !important; color: #111 !important; }
+html:not(.dark) .bg-\[\#0d0d0d\]    { background-color: #f5f5f8 !important; }
+
+/* ── Light mode border overrides ── */
+html:not(.dark) .border-white\/\[0\.04\]  { border-color: rgba(0,0,0,0.06) !important; }
+html:not(.dark) .border-white\/\[0\.05\],
+html:not(.dark) .border-white\/\[0\.06\],
+html:not(.dark) .border-white\/\[0\.07\],
+html:not(.dark) .border-white\/\[0\.08\]  { border-color: rgba(0,0,0,0.08) !important; }
+html:not(.dark) .border-white\/10         { border-color: rgba(0,0,0,0.10) !important; }
+html:not(.dark) .border-white\/\[0\.12\]  { border-color: rgba(0,0,0,0.10) !important; }
+html:not(.dark) .divide-white\/\[0\.05\] > * { border-color: rgba(0,0,0,0.07) !important; }
+
+/* ── Light mode — ink palette ── */
+html:not(.dark) .bg-ink-950,
+html:not(.dark) .bg-ink-900 { background-color: #e8e8ec !important; }
+html:not(.dark) .bg-ink-800 { background-color: #e0e0e4 !important; }
+html:not(.dark) .bg-ink-700 { background-color: #d8d8dc !important; }
+html:not(.dark) .border-ink-800 { border-color: rgba(0,0,0,0.10) !important; }
+html:not(.dark) .ring-ink-950  { --tw-ring-color: rgba(232,232,236,1) !important; }
+
+/* Opacity-modified ink classes (bg-ink-950/40, /50, /90, /95, etc.) compile to
+   entirely separate CSS classes from the bare ones above and were completely
+   unstyled for light mode — these are the frosted-glass sidebar, header,
+   dropdown, and mobile-nav panels, so leaving them unstyled meant they stayed
+   near-black at whatever opacity, dimming the whole shell. Matched generically
+   since call sites use several different shades/opacities. */
+html:not(.dark) [class*="bg-ink-950/"],
+html:not(.dark) [class*="bg-ink-900/"],
+html:not(.dark) [class*="bg-ink-800/"],
+html:not(.dark) [class*="bg-ink-700/"],
+html:not(.dark) [class*="bg-ink-600/"] {
+  background-color: rgba(255,255,255,0.85) !important;
+}
+
+/* Nav background/border is now theme-aware directly in MarketingNav.tsx
+   (Framer Motion animates it via inline style, which no CSS override can
+   reliably win against for a wrong-element selector — fixed at the source
+   instead). */
+
+/* ── Input & select in light mode ── */
+html:not(.dark) input,
+html:not(.dark) textarea {
+  color: #111 !important;
+}
+html:not(.dark) select {
+  color: #111 !important;
+  background-color: rgba(255,255,255,0.8) !important;
+}
+html:not(.dark) input::placeholder,
+html:not(.dark) textarea::placeholder {
+  color: rgba(10,10,10,0.28) !important;
+}
+html:not(.dark) select option {
+  background: #fff;
+  color: #111;
+}
+
+/* ── Neon-soft gradient banner in light mode ── */
+html:not(.dark) .bg-neon-soft {
+  background: linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(99,102,241,0.15) 100%) !important;
+}
+
+/* ── Hover/focus white utilities in light mode ──
+   These utilities only ever had a value meant for dark backgrounds — nothing
+   overrode them for light mode, so any hover/focus state anywhere in the app
+   would flash white-on-white (or near-invisible) text/backgrounds. Matched
+   generically by substring so this also covers any new hover:*-white variant
+   added later without needing another manual patch. The bg-white/90 "white"
+   button variant is excluded since that button is meant to stay white in
+   both modes. ── */
+html:not(.dark) [class*="hover:text-white"]:hover,
+html:not(.dark) [class*="focus:text-white"]:focus {
+  color: rgba(10,10,10,0.85) !important;
+}
+html:not(.dark) [class*="hover:bg-white"]:not([class*="hover:bg-white/90"]):hover,
+html:not(.dark) [class*="focus:bg-white"]:not([class*="focus:bg-white/90"]):focus {
+  background-color: rgba(0,0,0,0.05) !important;
+}
+html:not(.dark) [class*="hover:border-white"]:hover,
+html:not(.dark) [class*="focus:border-white"]:focus {
+  border-color: rgba(0,0,0,0.14) !important;
+}
+html:not(.dark) .group:hover [class*="group-hover:text-white"] {
+  color: rgba(10,10,10,0.85) !important;
+}
+html:not(.dark) .group:hover [class*="group-hover:bg-white"] {
+  background-color: rgba(0,0,0,0.05) !important;
+}
+html:not(.dark) .shadow-\[0_8px_32px_rgba\(0\,0\,0\,0\.8\)\] {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.06) !important;
+}
+
+/* ── Glow shadows in light mode ──
+   A diffuse colored halo tuned for near-black backgrounds reads as a muddy
+   smudge on white/light-gray. Swap in a crisp neutral elevation shadow with
+   just a hint of the brand color at the edge instead. ── */
+html:not(.dark) .shadow-glow {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 8px 20px -6px rgba(59,130,246,0.16) !important;
+}
+html:not(.dark) .shadow-glow-sm {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 6px 14px -6px rgba(59,130,246,0.12) !important;
+}
+html:not(.dark) .shadow-glow-blue {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 10px 24px -6px rgba(99,102,241,0.18) !important;
+}
+
+/* ── Glow border in light mode — soften; a bright gradient outline that
+   works on black is too loud on a light card ── */
+html:not(.dark) .glow-border::before {
+  opacity: 0.15;
 }

@@ -61,6 +61,16 @@ export interface ScoredMatch<T> {
   complementarySkills: string[];
   roleComplementary: boolean;
   lookingForMatch: boolean;
+  breakdown: MatchBreakdown;
+}
+
+/** Five-axis compatibility breakdown (0-100 each) — powers the "Why we match" radar view. */
+export interface MatchBreakdown {
+  skillOverlap: number;
+  stackOverlap: number;
+  complementary: number;
+  roleFit: number;
+  trust: number;
 }
 
 export function matchCandidates<T extends MatchInput & { role?: string | null; location?: string | null }>(
@@ -134,6 +144,17 @@ export function matchCandidates<T extends MatchInput & { role?: string | null; l
       const compat = Math.round(raw * 100);
       const score = Math.round(compat * 0.8 + (candidate.trustScore ?? 0) * 0.2);
 
+      // Same five signals the score is built from, surfaced as independent
+      // 0-100 axes so the client can render a radar/spider breakdown instead
+      // of just the single blended number.
+      const breakdown: MatchBreakdown = {
+        skillOverlap: Math.round(skillOverlap.ratio * 100),
+        stackOverlap: Math.round(stackOverlap.ratio * 100),
+        complementary: Math.round(skillComplement.ratio * 100),
+        roleFit: Math.round(roleComplement * 100),
+        trust: Math.round(candidate.trustScore ?? 0),
+      };
+
       return {
         candidate,
         score,
@@ -141,6 +162,7 @@ export function matchCandidates<T extends MatchInput & { role?: string | null; l
         sharedStack: stackOverlap.shared,
         complementarySkills: skillComplement.unique.slice(0, 3),
         roleComplementary: roleComplement === 1,
+        breakdown,
         lookingForMatch,
       };
     })

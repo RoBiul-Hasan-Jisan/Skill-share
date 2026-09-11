@@ -8,6 +8,7 @@ const TaskSchema = new Schema(
     assignee: { type: Types.ObjectId, ref: "User" },
     priority: { type: String, enum: ["low", "med", "high"], default: "med" },
     order: { type: Number, default: 0 },
+    dueDate: { type: Date },
   },
   { timestamps: true },
 );

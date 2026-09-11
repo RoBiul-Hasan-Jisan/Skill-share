@@ -131,6 +131,7 @@ export async function rankedMatches(req: AuthedRequest, res: Response) {
     complementarySkills: m.complementarySkills,
     roleComplementary: m.roleComplementary,
     lookingForMatch: m.lookingForMatch,
+    breakdown: m.breakdown,
   }));
 
   res.json({ matches });

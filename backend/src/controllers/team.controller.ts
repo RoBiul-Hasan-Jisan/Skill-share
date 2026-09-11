@@ -1,12 +1,36 @@
 import type { Response } from "express";
 import { z } from "zod";
 import { Team } from "../models/Team.js";
+import { Task } from "../models/Task.js";
 import { Conversation } from "../models/Conversation.js";
 import { User } from "../models/User.js";
 import { recomputeTrust } from "./user.controller.js";
 import type { AuthedRequest } from "../middleware/auth.js";
 
 const MEMBER_FIELDS = "name handle avatar availability trustScore role skills stack";
+
+/** Attaches a lightweight { total, done } task count to each team — powers
+ *  the progress bar on team cards without the client fetching every board. */
+async function withTaskStats<T extends { _id: unknown }>(teams: T[]) {
+  if (teams.length === 0) return teams as (T & { taskStats: { total: number; done: number } })[];
+  const ids = teams.map((t) => t._id);
+  const counts = await Task.aggregate([
+    { $match: { team: { $in: ids } } },
+    { $group: { _id: { team: "$team", done: { $eq: ["$status", "done"] } }, n: { $sum: 1 } } },
+  ]);
+  const stats = new Map<string, { total: number; done: number }>();
+  for (const c of counts) {
+    const key = String(c._id.team);
+    const cur = stats.get(key) ?? { total: 0, done: 0 };
+    cur.total += c.n;
+    if (c._id.done) cur.done += c.n;
+    stats.set(key, cur);
+  }
+  return teams.map((t) => ({
+    ...t,
+    taskStats: stats.get(String(t._id)) ?? { total: 0, done: 0 },
+  }));
+}
 
 const createSchema = z.object({
   name: z.string().min(2),
@@ -20,7 +44,7 @@ export async function myTeams(req: AuthedRequest, res: Response) {
   const teams = await Team.find({ members: req.userId })
     .populate("members", MEMBER_FIELDS)
     .lean();
-  res.json({ teams });
+  res.json({ teams: await withTaskStats(teams) });
 }
 
 export async function allTeams(req: AuthedRequest, res: Response) {
@@ -29,7 +53,7 @@ export async function allTeams(req: AuthedRequest, res: Response) {
     .sort({ createdAt: -1 })
     .limit(50)
     .lean();
-  res.json({ teams });
+  res.json({ teams: await withTaskStats(teams) });
 }
 
 export async function createTeam(req: AuthedRequest, res: Response) {
@@ -48,7 +72,8 @@ export async function createTeam(req: AuthedRequest, res: Response) {
   await recomputeTrust(req.userId!);
 
   const populated = await Team.findById(team._id).populate("members", MEMBER_FIELDS).lean();
-  res.status(201).json({ team: populated });
+  const [withStats] = await withTaskStats(populated ? [populated] : []);
+  res.status(201).json({ team: withStats });
 }
 
 export async function deleteTeam(req: AuthedRequest, res: Response) {
@@ -77,7 +102,8 @@ export async function removeMember(req: AuthedRequest, res: Response) {
   ).populate("members", MEMBER_FIELDS).lean();
   await User.findByIdAndUpdate(memberId, { $inc: { teamsJoined: -1 } });
   await recomputeTrust(memberId);
-  res.json({ team: updated });
+  const [withStats] = await withTaskStats(updated ? [updated] : []);
+  res.json({ team: withStats });
 }
 
 export async function joinTeam(req: AuthedRequest, res: Response) {
@@ -106,5 +132,6 @@ export async function joinTeam(req: AuthedRequest, res: Response) {
     await recomputeTrust(req.userId!);
   }
 
-  res.json({ team });
+  const [withStats] = await withTaskStats([team]);
+  res.json({ team: withStats });
 }

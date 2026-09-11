@@ -12,6 +12,7 @@ const createSchema = z.object({
   priority: z.enum(["low", "med", "high"]).optional().default("med"),
   assigneeId: z.string().optional(),
   status: z.enum(["todo", "in_progress", "review", "done"]).optional().default("todo"),
+  dueDate: z.coerce.date().optional(),
 });
 
 const updateSchema = z.object({
@@ -20,6 +21,7 @@ const updateSchema = z.object({
   priority: z.enum(["low", "med", "high"]).optional(),
   assignee: z.string().nullable().optional(),
   order: z.number().optional(),
+  dueDate: z.coerce.date().nullable().optional(),
 });
 
 export async function myTasks(req: AuthedRequest, res: Response) {
@@ -48,6 +50,7 @@ export async function createTask(req: AuthedRequest, res: Response) {
     priority: body.priority,
     status: body.status,
     assignee: body.assigneeId ?? null,
+    dueDate: body.dueDate ?? null,
   });
   const populated = await Task.findById(task._id).populate("assignee", ASSIGNEE_FIELDS).lean();
   res.status(201).json({ task: populated });

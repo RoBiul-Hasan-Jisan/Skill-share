@@ -203,6 +203,60 @@ export default function HomePage() {
       </section>
 
 
+      {/* ── Stats bar ──────────────────────────────────────── */}
+      <section className="relative mx-auto max-w-3xl px-4 pb-8 sm:px-6">
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+          variants={fade}
+          className="mx-auto flex max-w-md items-center justify-center divide-x divide-white/[0.07] rounded-2xl border border-white/[0.06] bg-white/[0.02] py-5"
+        >
+          {STATS.map((s) => (
+            <div key={s.label} className="flex-1 text-center">
+              <p className="font-display text-xl font-bold text-white sm:text-2xl">{s.value}</p>
+              <p className="mt-0.5 text-xs text-white/35">{s.label}</p>
+            </div>
+          ))}
+        </motion.div>
+      </section>
+
+      {/* ── Features ───────────────────────────────────────── */}
+      <section
+        id="features"
+        className="mx-auto max-w-5xl scroll-mt-24 px-4 py-16 sm:px-6"
+        aria-label="Features"
+      >
+        <SectionHeading
+          eyebrow="Features"
+          title="Everything you need to ship with someone"
+          subtitle="Not just a directory of profiles — the whole loop from finding people to actually building with them."
+        />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {FEATURES.map((f, i) => {
+            const Icon = f.icon;
+            return (
+              <motion.div
+                key={f.title}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-60px" }}
+                custom={i}
+                variants={fade}
+              >
+                <GlassCard className="h-full">
+                  <div className="grid h-10 w-10 place-items-center rounded-xl border border-neon-cyan/20 bg-neon-cyan/[0.08]">
+                    <Icon className="h-5 w-5 text-neon-cyan" aria-hidden />
+                  </div>
+                  <h3 className="mt-4 font-display text-base font-semibold text-white">{f.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-white/40">{f.desc}</p>
+                </GlassCard>
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+
       {/* ── How it works ───────────────────────────────────── */}
       <section
         id="how-it-works"
@@ -265,6 +319,64 @@ export default function HomePage() {
       </section>
 
 
+
+      {/* ── Pricing ────────────────────────────────────────── */}
+      <section
+        id="pricing"
+        className="mx-auto max-w-4xl scroll-mt-24 px-4 py-16 sm:px-6"
+        aria-label="Pricing"
+      >
+        <SectionHeading
+          eyebrow="Pricing"
+          title="Simple, transparent pricing"
+          subtitle="Start free. Upgrade only if you're forming more than one team or hiring."
+        />
+        <div className="grid gap-5 sm:grid-cols-3">
+          {PLANS.map((p, i) => (
+            <motion.div
+              key={p.name}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-60px" }}
+              custom={i}
+              variants={fade}
+              className={p.highlighted ? "sm:-translate-y-2" : undefined}
+            >
+              <GlassCard
+                glow={p.highlighted}
+                className={`relative h-full flex flex-col ${p.highlighted ? "border-neon-cyan/30" : ""}`}
+              >
+                {p.highlighted && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-neon-grad px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-ink-950">
+                    Most popular
+                  </span>
+                )}
+                <h3 className="font-display text-base font-semibold text-white">{p.name}</h3>
+                <p className="mt-1 text-xs text-white/40">{p.desc}</p>
+                <p className="mt-4">
+                  <span className="font-display text-3xl font-bold text-white">{p.price}</span>
+                  {p.price !== "$0" && <span className="text-sm text-white/30">/mo</span>}
+                </p>
+                <ul className="mt-5 flex-1 space-y-2.5">
+                  {p.features.map((f) => (
+                    <li key={f} className="flex items-start gap-2 text-sm text-white/60">
+                      <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-neon-cyan" aria-hidden />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  className="mt-6 w-full"
+                  variant={p.highlighted ? "primary" : "outline"}
+                  onClick={() => router.push("/signup")}
+                >
+                  {p.price === "$0" ? "Get started free" : `Start ${p.name}`}
+                </Button>
+              </GlassCard>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
       {/* ── FAQ ────────────────────────────────────────────── */}
       <section

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   Plus, Users, Layers, MessageSquare, X, Check, Settings,
   Trash2, ArrowLeft, MoreHorizontal, Kanban, AlertCircle,
-  Crown, ChevronLeft, ChevronRight, UserMinus,
+  Crown, ChevronLeft, ChevronRight, UserMinus, CalendarClock, Filter,
 } from "lucide-react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
@@ -46,6 +46,19 @@ const PRIORITY = {
   med:  { label: "P2", cls: "text-[#6366f1]/70 bg-[#6366f1]/[0.07] border border-[#6366f1]/20" },
   low:  { label: "P3", cls: "text-white/20 bg-white/[0.04] border border-white/[0.07]" },
 } as const;
+
+/** Due-date urgency — overdue (red), due within 2 days (amber), otherwise neutral. */
+function dueUrgency(dueDate?: string): { label: string; cls: string } | null {
+  if (!dueDate) return null;
+  const d = new Date(dueDate);
+  const now = new Date();
+  const days = Math.ceil((d.getTime() - now.setHours(0, 0, 0, 0)) / 86_400_000);
+  const fmt = d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  if (days < 0) return { label: `Overdue · ${fmt}`, cls: "text-red-400/90 bg-red-500/[0.08] border-red-500/25" };
+  if (days === 0) return { label: "Due today", cls: "text-amber-400/90 bg-amber-500/[0.08] border-amber-500/25" };
+  if (days <= 2) return { label: `Due in ${days}d`, cls: "text-amber-400/80 bg-amber-500/[0.06] border-amber-500/20" };
+  return { label: fmt, cls: "text-white/30 bg-white/[0.03] border-white/[0.08]" };
+}
 
 /* ─── Task card ─────────────────────────────────────────────────── */
 function TaskCard({
@@ -92,10 +105,18 @@ function TaskCard({
         </button>
       </div>
 
-      <div className="mt-2.5 flex items-center gap-1">
+      <div className="mt-2.5 flex items-center gap-1 flex-wrap">
         <span className={cn("rounded-md px-1.5 py-0.5 text-[10px] font-bold", priority.cls)}>
           {priority.label}
         </span>
+        {(() => {
+          const due = dueUrgency(task.dueDate);
+          return due ? (
+            <span className={cn("flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-medium", due.cls)}>
+              <CalendarClock className="h-2.5 w-2.5" /> {due.label}
+            </span>
+          ) : null;
+        })()}
         {/* Status navigation arrows */}
         <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition ml-1">
           <button
@@ -191,7 +212,11 @@ export default function Teams() {
   const [taskTitle, setTaskTitle] = useState("");
   const [taskPriority, setTaskPriority] = useState<"low" | "med" | "high">("med");
   const [taskAssigneeId, setTaskAssigneeId] = useState("");
+  const [taskDueDate, setTaskDueDate] = useState("");
   const [creatingTask, setCreatingTask] = useState(false);
+
+  /* Board filters */
+  const [filterAssignee, setFilterAssignee] = useState<string | null>(null);
 
   /* Settings / delete */
   const [showSettings, setShowSettings] = useState<Team | null>(null);
@@ -270,6 +295,7 @@ export default function Teams() {
   const openBoard = async (team: Team) => {
     setBoardTeam(team);
     setBoardTasks([]);
+    setFilterAssignee(null);
     setLoadingTasks(true);
     try {
       const tasks = await api.teamTasks(team.id);
@@ -321,12 +347,14 @@ export default function Teams() {
         priority: taskPriority,
         assigneeId: taskAssigneeId || undefined,
         status: showCreateTask ?? "todo",
+        dueDate: taskDueDate || undefined,
       });
       setBoardTasks((prev) => [...prev, task]);
       setShowCreateTask(null);
       setTaskTitle("");
       setTaskPriority("med");
       setTaskAssigneeId("");
+      setTaskDueDate("");
     } catch (err: any) {
       toast(err.message ?? "Failed to create task", "error");
     } finally { setCreatingTask(false); }
@@ -364,6 +392,34 @@ export default function Teams() {
           </Button>
         </div>
 
+        {/* Assignee filter */}
+        {boardTeam.members.length > 1 && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Filter className="h-3.5 w-3.5 text-white/20" />
+            <button
+              onClick={() => setFilterAssignee(null)}
+              className={cn(
+                "rounded-lg border px-2.5 py-1 text-[11px] transition",
+                filterAssignee === null ? "border-neon-cyan/30 bg-neon-cyan/[0.08] text-neon-cyan" : "border-white/[0.07] text-white/35 hover:text-white/60",
+              )}
+            >
+              Everyone
+            </button>
+            {boardTeam.members.map((m) => (
+              <button
+                key={m.id}
+                onClick={() => setFilterAssignee((cur) => (cur === m.id ? null : m.id))}
+                className={cn(
+                  "flex items-center gap-1.5 rounded-lg border pl-1 pr-2.5 py-1 text-[11px] transition",
+                  filterAssignee === m.id ? "border-neon-cyan/30 bg-neon-cyan/[0.08] text-neon-cyan" : "border-white/[0.07] text-white/35 hover:text-white/60",
+                )}
+              >
+                <Avatar src={m.avatar} name={m.name} size={16} /> {m.name.split(" ")[0]}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Kanban columns */}
         {loadingTasks ? (
           <div className="flex gap-3 overflow-x-auto pb-4">
@@ -380,7 +436,9 @@ export default function Teams() {
         ) : (
           <div className="flex gap-3 overflow-x-auto pb-4">
             {COLUMNS.map((col) => {
-              const colTasks = boardTasks.filter((t) => t.status === col.id);
+              const colTasks = boardTasks
+                .filter((t) => t.status === col.id)
+                .filter((t) => !filterAssignee || t.assignee?.id === filterAssignee);
               return (
                 <div
                   key={col.id}
@@ -513,6 +571,18 @@ export default function Teams() {
                           ))}
                         </select>
                       </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-1.5 flex items-center gap-1.5 text-[11px] text-white/30">
+                        <CalendarClock className="h-3 w-3" /> Due date <span className="text-white/15">(optional)</span>
+                      </label>
+                      <input
+                        type="date"
+                        value={taskDueDate}
+                        onChange={(e) => setTaskDueDate(e.target.value)}
+                        className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-3.5 py-2 text-sm text-white/80 outline-none focus:border-neon-cyan/30 transition [color-scheme:dark]"
+                      />
                     </div>
                   </div>
 
@@ -862,6 +932,22 @@ export default function Teams() {
                       </span>
                     </div>
 
+                    {/* Progress */}
+                    {t.taskStats.total > 0 && (
+                      <div className="mt-3">
+                        <div className="mb-1 flex items-center justify-between text-[11px] text-white/30">
+                          <span>Progress</span>
+                          <span>{t.taskStats.done}/{t.taskStats.total} done</span>
+                        </div>
+                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/[0.06]">
+                          <div
+                            className="h-full rounded-full bg-neon-grad transition-all duration-500"
+                            style={{ width: `${Math.round((t.taskStats.done / t.taskStats.total) * 100)}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
                     {/* Stack */}
                     {t.stack.length > 0 && (
                       <div className="mt-3 flex flex-wrap gap-1.5">
@@ -945,6 +1031,21 @@ export default function Teams() {
                       </div>
                       <span className="text-xs text-white/25">{t.members.length} member{t.members.length !== 1 ? "s" : ""}</span>
                     </div>
+
+                    {t.taskStats.total > 0 && (
+                      <div className="mt-3">
+                        <div className="mb-1 flex items-center justify-between text-[11px] text-white/30">
+                          <span>Progress</span>
+                          <span>{t.taskStats.done}/{t.taskStats.total} done</span>
+                        </div>
+                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/[0.06]">
+                          <div
+                            className="h-full rounded-full bg-neon-grad transition-all duration-500"
+                            style={{ width: `${Math.round((t.taskStats.done / t.taskStats.total) * 100)}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
 
                     {t.stack.length > 0 && (
                       <div className="mt-3 flex flex-wrap gap-1.5">

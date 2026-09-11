@@ -62,12 +62,22 @@ export interface DevUser {
   lookingFor: string[];
 }
 
+/** Five-axis compatibility breakdown (0-100 each) behind the "Why we match" radar view. */
+export interface MatchBreakdown {
+  skillOverlap: number;
+  stackOverlap: number;
+  complementary: number;
+  roleFit: number;
+  trust: number;
+}
+
 export interface MatchSuggestion {
   user: DevUser;
   score: number;
   reasons: string[];
   sharedStack: string[];
   complementary: string[];
+  breakdown: MatchBreakdown;
 }
 
 export interface Team {
@@ -80,6 +90,7 @@ export interface Team {
   stage: "idea" | "building" | "launched";
   conversationId?: string;
   ownerId?: string;
+  taskStats: { total: number; done: number };
 }
 
 export interface IdeaApplication {
@@ -108,6 +119,7 @@ export interface Task {
   status: "todo" | "in_progress" | "review" | "done";
   assignee?: DevUser;
   priority: "low" | "med" | "high";
+  dueDate?: string;
 }
 
 export type RoomKind = "dm" | "team";

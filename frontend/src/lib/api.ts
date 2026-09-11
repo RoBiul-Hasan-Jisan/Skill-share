@@ -1,5 +1,5 @@
 import type {
-  DevUser, MatchSuggestion, Team, StartupIdea, Task,
+  DevUser, MatchSuggestion, MatchBreakdown, Team, StartupIdea, Task,
   ChatRoom, ChatMessage, ActivityPoint, Project, Certificate,
   AppNotification, ConnectionItem,
 } from "@/types";
@@ -85,6 +85,7 @@ function normalizeTeam(t: Record<string, any>): Team {
     stage: t.stage ?? "idea",
     conversationId: t.conversation ? String(t.conversation) : undefined,
     ownerId: t.owner ? String(t.owner._id ?? t.owner) : undefined,
+    taskStats: t.taskStats ?? { total: 0, done: 0 },
   };
 }
 
@@ -108,6 +109,7 @@ function normalizeTask(t: Record<string, any>): Task {
     status: t.status ?? "todo",
     assignee: t.assignee ? normalizeUser(t.assignee) : undefined,
     priority: t.priority ?? "med",
+    dueDate: t.dueDate ? String(t.dueDate) : undefined,
   };
 }
 
@@ -186,7 +188,11 @@ function enrichMatch(raw: Record<string, any>): MatchSuggestion {
   if (reasons.length < 2)
     reasons.push("Strong compatibility across skills and goals");
 
-  return { user, score: raw.score, reasons: reasons.slice(0, 3), sharedStack, complementary };
+  const breakdown: MatchBreakdown = raw.breakdown ?? {
+    skillOverlap: 0, stackOverlap: 0, complementary: 0, roleFit: 0, trust: user.trustScore,
+  };
+
+  return { user, score: raw.score, reasons: reasons.slice(0, 3), sharedStack, complementary, breakdown };
 }
 
 function normalizeProject(p: Record<string, any>): Project {
@@ -363,7 +369,7 @@ export const api = {
     return tasks.map(normalizeTask);
   },
 
-  createTask: async (data: { teamId: string; title: string; priority?: string; assigneeId?: string; status?: string }): Promise<Task> => {
+  createTask: async (data: { teamId: string; title: string; priority?: string; assigneeId?: string; status?: string; dueDate?: string }): Promise<Task> => {
     const { task } = await apiFetch<{ task: any }>("/tasks", {
       method: "POST",
       body: JSON.stringify(data),

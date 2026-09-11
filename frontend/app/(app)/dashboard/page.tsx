@@ -17,11 +17,12 @@ import { Avatar } from "@/components/ui/Avatar";
 import { ScoreRing } from "@/components/ui/ScoreRing";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { Button } from "@/components/ui/Button";
+import { MatchRadarModal } from "@/components/match/MatchRadarModal";
 import { useAsync } from "@/hooks/useAsync";
 import { useAuth } from "@/context/AuthContext";
 import { api } from "@/lib/api";
 import { fmt as _fmt } from "@/lib/utils";
-import type { Task, DevUser } from "@/types";
+import type { Task, DevUser, MatchSuggestion } from "@/types";
 
 function greeting() {
   const h = new Date().getHours();
@@ -71,6 +72,7 @@ export default function Dashboard() {
   const [taskPriority, setTaskPriority] = useState<"low" | "med" | "high">("med");
   const [savingTask, setSavingTask] = useState(false);
   const [movingTask, setMovingTask] = useState<string | null>(null);
+  const [radarMatch, setRadarMatch] = useState<MatchSuggestion | null>(null);
   const taskInputRef = useRef<HTMLInputElement>(null);
 
   const COLS = ["todo", "in_progress", "review", "done"] as const;
@@ -278,14 +280,18 @@ export default function Dashboard() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3 + i * 0.07 }}
                   >
-                    <Link href={`/profile/${m.user.id}`} className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5 hover:border-neon-cyan/20 hover:bg-neon-cyan/[0.03] transition group">
-                      <Avatar src={m.user.avatar} name={m.user.name} status={m.user.availability} size={36} />
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium text-white group-hover:text-neon-cyan transition-colors">{m.user.name}</p>
-                        <p className="truncate text-xs text-slate-500">{m.user.role || "Developer"}</p>
-                      </div>
-                      <ScoreRing value={m.score} size={40} />
-                    </Link>
+                    <div className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5 hover:border-neon-cyan/20 hover:bg-neon-cyan/[0.03] transition group">
+                      <Link href={`/profile/${m.user.id}`} className="flex min-w-0 flex-1 items-center gap-3">
+                        <Avatar src={m.user.avatar} name={m.user.name} status={m.user.availability} size={36} />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-medium text-white group-hover:text-neon-cyan transition-colors">{m.user.name}</p>
+                          <p className="truncate text-xs text-slate-500">{m.user.role || "Developer"}</p>
+                        </div>
+                      </Link>
+                      <button onClick={() => setRadarMatch(m)} title="Why we match">
+                        <ScoreRing value={m.score} size={40} />
+                      </button>
+                    </div>
                   </motion.div>
                 ))}
           </div>
@@ -451,6 +457,8 @@ export default function Dashboard() {
           })}
         </div>
       </GlassCard>
+
+      <MatchRadarModal match={radarMatch} onClose={() => setRadarMatch(null)} />
     </div>
   );
 }

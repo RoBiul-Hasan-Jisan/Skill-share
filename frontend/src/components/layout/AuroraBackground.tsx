@@ -1,10 +1,9 @@
-/** Multi-layer premium atmospheric background.
- *  Pure black base with subtle depth layers — no cartoon blobs. */
+/** Quiet ledger-paper backdrop: a faint ruled grid fading into the page,
+ *  with one restrained brass wash near the top. No colored glow blobs. */
 export function AuroraBackground() {
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-
-      {/* Layer 1: Faint dot grid — fades out toward bottom */}
+      {/* Faint dot grid — reads as ruled paper, fades toward the bottom */}
       <div
         className="absolute inset-0"
         style={{
@@ -15,46 +14,26 @@ export function AuroraBackground() {
         }}
       />
 
-      {/* Layer 2: Top-center cyan glow (primary accent) */}
+      {/* Single restrained brass wash, top-center */}
       <div
         className="absolute left-0 right-0 top-0"
         style={{
-          height: "55vh",
-          background: "radial-gradient(ellipse 80% 100% at 50% -10%, rgba(59,130,246,0.09) 0%, transparent 70%)",
+          height: "50vh",
+          background: "radial-gradient(ellipse 70% 90% at 50% -10%, rgba(200,134,46,0.06) 0%, transparent 70%)",
         }}
       />
 
-      {/* Layer 3: Top-right secondary blue glow */}
-      <div
-        className="absolute top-0 right-0"
-        style={{
-          width: "50vw",
-          height: "45vh",
-          background: "radial-gradient(ellipse 60% 80% at 100% 0%, rgba(99,102,241,0.06) 0%, transparent 70%)",
-        }}
-      />
-
-      {/* Layer 4: Subtle bottom-left depth */}
-      <div
-        className="absolute bottom-0 left-0"
-        style={{
-          width: "40vw",
-          height: "35vh",
-          background: "radial-gradient(ellipse 60% 80% at 0% 100%, rgba(59,130,246,0.03) 0%, transparent 70%)",
-        }}
-      />
-
-      {/* Layer 5: Horizontal hairline beam at ~30% height */}
+      {/* Horizontal rule at ~30% — the one deliberate "ledger line" */}
       <div
         className="absolute left-0 right-0"
         style={{
           top: "30%",
           height: "1px",
-          background: "linear-gradient(90deg, transparent 0%, rgba(59,130,246,0.06) 30%, rgba(99,102,241,0.06) 70%, transparent 100%)",
+          background: "linear-gradient(90deg, transparent 0%, rgba(200,134,46,0.08) 50%, transparent 100%)",
         }}
       />
 
-      {/* Layer 6: Vignette edges */}
+      {/* Vignette edges */}
       <div
         className="absolute inset-0"
         style={{

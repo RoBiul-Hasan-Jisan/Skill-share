@@ -86,21 +86,17 @@ export function MarketingNav() {
       >
         <motion.div
           animate={{
-            background:
-              theme === "dark"
-                ? scrolled ? "rgba(0,0,0,0.92)" : "rgba(0,0,0,0.72)"
-                : scrolled ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.72)",
+            background: theme === "dark" ? "#191C21" : "#F7F6F2",
             borderColor:
               theme === "dark"
-                ? scrolled ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.06)"
-                : scrolled ? "rgba(0,0,0,0.10)" : "rgba(0,0,0,0.06)",
+                ? scrolled ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.09)"
+                : scrolled ? "rgba(0,0,0,0.14)" : "rgba(0,0,0,0.10)",
             boxShadow: scrolled
-              ? "0 4px 40px rgba(0,0,0,0.15), 0 0 0 1px rgba(59,130,246,0.04) inset"
-              : "none",
+              ? "3px 3px 0 0 rgba(0,0,0,0.35)"
+              : "2px 2px 0 0 rgba(0,0,0,0.25)",
           }}
           transition={{ duration: 0.3 }}
-          className="flex items-center justify-between gap-4 rounded-2xl border px-4 py-2.5"
-          style={{ backdropFilter: "blur(24px)" }}
+          className="flex items-center justify-between gap-4 rounded-md border px-4 py-2.5"
         >
           <Link href="/" className="shrink-0">
             <Logo />
@@ -178,12 +174,11 @@ export function MarketingNav() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: 0.18 }}
-            className="fixed inset-x-4 top-[4.5rem] z-40 rounded-2xl border p-3 md:hidden"
+            className="fixed inset-x-4 top-[4.5rem] z-40 rounded-md border p-3 md:hidden"
             style={{
-              background: theme === "dark" ? "rgba(5,5,5,0.97)" : "rgba(255,255,255,0.97)",
-              borderColor: theme === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)",
-              backdropFilter: "blur(24px)",
-              boxShadow: theme === "dark" ? "0 8px 40px rgba(0,0,0,0.6)" : "0 8px 40px rgba(0,0,0,0.15)",
+              background: theme === "dark" ? "#191C21" : "#F7F6F2",
+              borderColor: theme === "dark" ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.10)",
+              boxShadow: theme === "dark" ? "3px 3px 0 0 rgba(0,0,0,0.5)" : "3px 3px 0 0 rgba(0,0,0,0.15)",
             }}
           >
             <nav className="flex flex-col">

@@ -34,16 +34,16 @@ const ROLES = [
 
 const COLUMNS = [
   { id: "todo",        label: "To Do",       accent: "text-white/50",    dot: "bg-white/25",       header: "border-white/[0.06]"  },
-  { id: "in_progress", label: "In Progress", accent: "text-[#3b82f6]",   dot: "bg-[#3b82f6]",      header: "border-[#3b82f6]/20"  },
-  { id: "review",      label: "Review",      accent: "text-[#6366f1]",   dot: "bg-[#6366f1]",      header: "border-[#6366f1]/20"  },
+  { id: "in_progress", label: "In Progress", accent: "text-[#C8862E]",   dot: "bg-[#C8862E]",      header: "border-[#C8862E]/20"  },
+  { id: "review",      label: "Review",      accent: "text-[#A66A22]",   dot: "bg-[#A66A22]",      header: "border-[#A66A22]/20"  },
   { id: "done",        label: "Done",        accent: "text-white/25",    dot: "bg-white/15",       header: "border-white/[0.04]"  },
 ] as const;
 
 type ColId = (typeof COLUMNS)[number]["id"];
 
 const PRIORITY = {
-  high: { label: "P1", cls: "text-[#3b82f6]/80 bg-[#3b82f6]/[0.07] border border-[#3b82f6]/20" },
-  med:  { label: "P2", cls: "text-[#6366f1]/70 bg-[#6366f1]/[0.07] border border-[#6366f1]/20" },
+  high: { label: "P1", cls: "text-[#C8862E]/80 bg-[#C8862E]/[0.07] border border-[#C8862E]/20" },
+  med:  { label: "P2", cls: "text-[#A66A22]/70 bg-[#A66A22]/[0.07] border border-[#A66A22]/20" },
   low:  { label: "P3", cls: "text-white/20 bg-white/[0.04] border border-white/[0.07]" },
 } as const;
 
@@ -158,7 +158,7 @@ function TaskCard({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -4 }}
             transition={{ duration: 0.12 }}
-            className="absolute right-0 top-8 z-30 w-44 rounded-xl border border-white/[0.08] bg-[#0a0a0a] shadow-[0_8px_32px_rgba(0,0,0,0.8)] p-1.5"
+            className="absolute right-0 top-8 z-30 w-44 rounded-xl border border-white/[0.08] bg-[#14161A] shadow-[0_8px_32px_rgba(0,0,0,0.8)] p-1.5"
           >
             <p className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-white/20">
               Move to
@@ -563,7 +563,7 @@ export default function Teams() {
                         <select
                           value={taskAssigneeId}
                           onChange={(e) => setTaskAssigneeId(e.target.value)}
-                          className="w-full rounded-xl border border-white/[0.08] bg-[#0a0a0a] px-2.5 py-1.5 text-xs text-white/70 outline-none focus:border-neon-cyan/30 transition"
+                          className="w-full rounded-xl border border-white/[0.08] bg-[#14161A] px-2.5 py-1.5 text-xs text-white/70 outline-none focus:border-neon-cyan/30 transition"
                         >
                           <option value="">Unassigned</option>
                           {boardTeam.members.map((m) => (
@@ -726,7 +726,7 @@ export default function Teams() {
                           className={cn(
                             "rounded-lg border px-2.5 py-1 text-xs transition",
                             openRoles.includes(r)
-                              ? "border-[#6366f1]/30 bg-[#6366f1]/[0.07] text-[#6366f1]"
+                              ? "border-[#A66A22]/30 bg-[#A66A22]/[0.07] text-[#A66A22]"
                               : "border-white/[0.07] text-white/35 hover:text-white/60",
                           )}
                         >

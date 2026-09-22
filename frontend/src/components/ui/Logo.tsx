@@ -3,19 +3,11 @@ import { cn } from "@/lib/utils";
 export function Logo({ className, withWord = true }: { className?: string; withWord?: boolean }) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <span className="relative grid h-8 w-8 place-items-center rounded-lg bg-neon-grad shadow-glow">
-        {/* Two interlocking sparks — two developers' work fusing into one shared build. */}
-        <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none">
-          <path
-            d="M9.5 3 6 11h4l-1.5 10L15 12h-4l1.5-9z"
-            fill="#0a0c10"
-            fillOpacity={0.92}
-          />
-          <path
-            d="M16.5 8 14 14h2.6l-.9 5.5L20 13h-2.4l1-5z"
-            fill="#0a0c10"
-            fillOpacity={0.5}
-          />
+      {/* A tally/check mark on an index tab — the roster metaphor: someone
+          has been vetted and entered onto the sheet. */}
+      <span className="relative grid h-8 w-8 shrink-0 place-items-center rounded-[3px] bg-neon-grad shadow-glow-sm">
+        <svg viewBox="0 0 24 24" className="h-[17px] w-[17px]" fill="none">
+          <path d="M5 12.5 10 17 19 7" stroke="#14161A" strokeWidth={2.6} strokeLinecap="square" strokeLinejoin="miter" />
         </svg>
       </span>
       {withWord && (

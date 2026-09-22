@@ -38,10 +38,10 @@ export type TrustTier = {
 };
 
 export const TRUST_TIERS: TrustTier[] = [
-  { label: "Beginner", emoji: "🔴", tone: "magenta", color: "#f43f5e", min: 0 },
-  { label: "Intermediate", emoji: "🟡", tone: "default", color: "#facc15", min: 30 },
-  { label: "Advanced", emoji: "🟢", tone: "lime", color: "#10b981", min: 70 },
-  { label: "Expert", emoji: "🏆", tone: "cyan", color: "#3b82f6", min: 90 },
+  { label: "Beginner", emoji: "🔴", tone: "magenta", color: "#A8503D", min: 0 },
+  { label: "Intermediate", emoji: "🟡", tone: "default", color: "#D9A441", min: 30 },
+  { label: "Advanced", emoji: "🟢", tone: "lime", color: "#55805F", min: 70 },
+  { label: "Expert", emoji: "🏆", tone: "cyan", color: "#4A6670", min: 90 },
 ];
 
 export function trustTier(score: number): TrustTier {

@@ -97,10 +97,10 @@ function ActivityGrid() {
 
   const levelColor = (v: number) => {
     if (v === 0) return "bg-white/[0.04] border-white/[0.04]";
-    if (v === 1) return "bg-[#3b82f6]/[0.12] border-[#3b82f6]/[0.08]";
-    if (v === 2) return "bg-[#3b82f6]/[0.25] border-[#3b82f6]/[0.15]";
-    if (v === 3) return "bg-[#3b82f6]/[0.45] border-[#3b82f6]/[0.3]";
-    return "bg-[#3b82f6]/[0.7] border-[#3b82f6]/[0.5]";
+    if (v === 1) return "bg-[#C8862E]/[0.12] border-[#C8862E]/[0.08]";
+    if (v === 2) return "bg-[#C8862E]/[0.25] border-[#C8862E]/[0.15]";
+    if (v === 3) return "bg-[#C8862E]/[0.45] border-[#C8862E]/[0.3]";
+    return "bg-[#C8862E]/[0.7] border-[#C8862E]/[0.5]";
   };
 
   return (
@@ -279,7 +279,7 @@ export default function UserProfile() {
         value: profile.trustBreakdown[k],
       }))
     : [];
-  const barColor = (v: number) => v >= 80 ? "#10b981" : v >= 50 ? "#3b82f6" : "#f43f5e";
+  const barColor = (v: number) => v >= 80 ? "#55805F" : v >= 50 ? "#C8862E" : "#A8503D";
 
   return (
     <div className="space-y-6">

@@ -72,8 +72,8 @@ export function MatchRadarModal({ match, onClose }: Props) {
                     <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
                     <Radar
                       dataKey="value"
-                      stroke="#3b82f6"
-                      fill="#6366f1"
+                      stroke="#C8862E"
+                      fill="#A66A22"
                       fillOpacity={0.32}
                       strokeWidth={2}
                     />

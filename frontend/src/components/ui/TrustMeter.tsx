@@ -32,7 +32,6 @@ export function TrustMeter({
             strokeDashoffset={offset}
             style={{
               transition: "stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1)",
-              filter: `drop-shadow(0 0 8px ${tier.color}aa)`,
             }}
           />
         </svg>

@@ -70,7 +70,7 @@ function SidebarNav({ unreadChat, onNavigate }: { unreadChat: number; onNavigate
               />
             )}
             {isActive && (
-              <span className="absolute left-0 h-[60%] w-0.5 rounded-r-full bg-gradient-to-b from-[#3b82f6] to-[#6366f1]" />
+              <span className="absolute left-0 h-[60%] w-0.5 rounded-r-full bg-gradient-to-b from-[#C8862E] to-[#A66A22]" />
             )}
             <span className="relative z-10 flex items-center gap-3 flex-1">
               <item.icon className="h-4 w-4 shrink-0" />
@@ -249,7 +249,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen">
       {/* ── Desktop Sidebar ── */}
-      <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-white/5 bg-ink-950/40 p-4 backdrop-blur-xl lg:flex">
+      <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-white/10 bg-ink-950 p-4 lg:flex">
         <div className="px-2 py-2">
           <Link href="/dashboard" className="block"><Logo /></Link>
         </div>
@@ -337,7 +337,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* ── Main content area ── */}
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Topbar */}
-        <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-white/5 bg-ink-950/50 px-4 py-3 backdrop-blur-xl sm:gap-4 sm:px-5">
+        <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-white/10 bg-ink-950 px-4 py-3 sm:gap-4 sm:px-5">
           <button
             type="button"
             className="shrink-0 rounded-lg border border-white/10 p-2 text-slate-300 transition hover:text-white lg:hidden"
@@ -376,7 +376,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -6, scale: 0.98 }}
                   transition={{ duration: 0.12 }}
-                  className="absolute left-0 right-0 top-11 z-50 overflow-hidden rounded-2xl border border-white/10 bg-ink-950/95 shadow-2xl backdrop-blur-xl"
+                  className="absolute left-0 right-0 top-11 z-50 overflow-hidden rounded-md border border-white/10 bg-ink-900 shadow-card"
                 >
                   {searchLoading ? (
                     <div className="flex items-center justify-center gap-2 py-8 text-sm text-slate-500">
@@ -453,7 +453,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.97 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-10 z-50 w-80 rounded-2xl border border-white/10 bg-ink-950/95 shadow-2xl backdrop-blur-xl"
+                  className="absolute right-0 top-10 z-50 w-80 rounded-md border border-white/10 bg-ink-900 shadow-card"
                 >
                   <div className="flex items-center justify-between border-b border-white/5 px-4 py-3">
                     <h3 className="font-semibold text-white text-sm">Notifications</h3>
@@ -547,7 +547,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </div>
 
       {/* ── Mobile Bottom Nav ── */}
-      <nav className="fixed bottom-0 left-0 right-0 z-30 flex border-t border-white/5 bg-ink-950/90 backdrop-blur-xl lg:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-30 flex border-t border-white/10 bg-ink-950 lg:hidden">
         {mobileNav.map((item) => {
           const isActive = pathname === item.to || pathname.startsWith(`${item.to}/`);
           const chatBadge = item.to === "/chat" && unreadChat > 0;
@@ -560,7 +560,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               {isActive && (
                 <motion.span
                   layoutId="mobile-tab-indicator"
-                  className="absolute inset-x-2 top-0 h-0.5 rounded-b-full bg-gradient-to-r from-[#3b82f6] to-[#6366f1]"
+                  className="absolute inset-x-2 top-0 h-0.5 rounded-b-full bg-gradient-to-r from-[#C8862E] to-[#A66A22]"
                   transition={{ type: "spring", stiffness: 380, damping: 32 }}
                 />
               )}

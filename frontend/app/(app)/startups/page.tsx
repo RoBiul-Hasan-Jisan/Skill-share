@@ -254,9 +254,9 @@ export default function Startups() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3 rounded-xl border border-[#6366f1]/10 bg-[#6366f1]/[0.04] px-4 py-3"
+          className="flex items-center gap-3 rounded-xl border border-[#A66A22]/10 bg-[#A66A22]/[0.04] px-4 py-3"
         >
-          <Trophy className="h-4 w-4 text-[#6366f1]/60 shrink-0" />
+          <Trophy className="h-4 w-4 text-[#A66A22]/60 shrink-0" />
           <p className="text-sm text-white/50">
             Hackathon projects looking for balanced teams. Fast-track assembly in under 60 seconds.
           </p>
@@ -521,7 +521,7 @@ export default function Startups() {
         <GlassCard className="py-16 text-center">
           {activeTab === "hackathons" ? (
             <>
-              <Trophy className="mx-auto mb-4 h-10 w-10 text-[#6366f1] opacity-50" />
+              <Trophy className="mx-auto mb-4 h-10 w-10 text-[#A66A22] opacity-50" />
               <p className="text-white/40 mb-2">No hackathon ideas yet.</p>
               <p className="text-sm text-white/25 mb-4">Post an idea and tag it with "hackathon" to show here.</p>
             </>

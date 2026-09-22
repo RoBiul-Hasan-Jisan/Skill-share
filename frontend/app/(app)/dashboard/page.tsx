@@ -225,12 +225,12 @@ export default function Dashboard() {
               <AreaChart data={activity} margin={{ left: -20, right: 8, top: 8 }}>
                 <defs>
                   <linearGradient id="gViews" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.5} />
-                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#C8862E" stopOpacity={0.5} />
+                    <stop offset="100%" stopColor="#C8862E" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="gMatch" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#f43f5e" stopOpacity={0.4} />
-                    <stop offset="100%" stopColor="#f43f5e" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#A8503D" stopOpacity={0.4} />
+                    <stop offset="100%" stopColor="#A8503D" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false} />
@@ -244,8 +244,8 @@ export default function Dashboard() {
                     color: "#fff",
                   }}
                 />
-                <Area type="monotone" dataKey="views" name="Received" stroke="#3b82f6" strokeWidth={2} fill="url(#gViews)" />
-                <Area type="monotone" dataKey="matches" name="Sent" stroke="#f43f5e" strokeWidth={2} fill="url(#gMatch)" />
+                <Area type="monotone" dataKey="views" name="Received" stroke="#C8862E" strokeWidth={2} fill="url(#gViews)" />
+                <Area type="monotone" dataKey="matches" name="Sent" stroke="#A8503D" strokeWidth={2} fill="url(#gMatch)" />
               </AreaChart>
             </ResponsiveContainer>
           )}

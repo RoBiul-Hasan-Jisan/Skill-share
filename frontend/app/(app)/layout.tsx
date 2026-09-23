@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { RequireAuth } from "@/context/AuthContext";
-import { AppShell } from "@/components/layout/AppShell";
+import { AppShell } from "@/layout/app-shell";
 
 export default function AuthenticatedLayout({ children }: { children: ReactNode }) {
   return (

@@ -8,8 +8,9 @@ export const metadata: Metadata = {
   description:
     "SkillShare is a developer collaboration platform for skill-based teammate and cofounder matching, team chat, and trust scoring.",
   icons: {
-    icon: "/logo.svg",
-    shortcut: "/logo.svg",
+    icon: "/favicon-512.png",
+    shortcut: "/favicon-512.png",
+    apple: "/favicon-512.png",
   },
 };
 

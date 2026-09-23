@@ -18,6 +18,11 @@ const tb = (p: number, g: number, c: number, pr: number, a: number): TrustBreakd
   profile: p, github: g, certificates: c, projects: pr, activity: a,
 });
 
+// Five-axis match breakdown that powers the "Why we match" radar view.
+const mb = (skillOverlap: number, stackOverlap: number, complementary: number, roleFit: number, trust: number) => ({
+  skillOverlap, stackOverlap, complementary, roleFit, trust,
+});
+
 export const me: DevUser = {
   id: "u0",
   name: "Aria Chen",
@@ -137,6 +142,7 @@ export const matches: MatchSuggestion[] = [
       "Overlapping React stack means zero ramp-up",
     ],
     sharedStack: ["React", "Tailwind"], complementary: ["UI/UX", "Design Systems"],
+    breakdown: mb(75, 90, 95, 98, 93),
   },
   {
     user: users[1], score: 91,
@@ -146,6 +152,7 @@ export const matches: MatchSuggestion[] = [
       "Availability aligns (open to new project)",
     ],
     sharedStack: ["FastAPI", "OpenAI"], complementary: ["LangChain", "Vector DBs"],
+    breakdown: mb(70, 85, 90, 88, 84),
   },
   {
     user: users[3], score: 84,
@@ -155,6 +162,7 @@ export const matches: MatchSuggestion[] = [
       "Same product ambition (B2B AI tooling)",
     ],
     sharedStack: [], complementary: ["Growth", "Sales", "Product"],
+    breakdown: mb(20, 10, 95, 90, 74),
   },
   {
     user: users[4], score: 79,
@@ -164,6 +172,7 @@ export const matches: MatchSuggestion[] = [
       "Strong systems reputation",
     ],
     sharedStack: ["Postgres", "Redis"], complementary: ["Kafka", "Distributed Systems"],
+    breakdown: mb(60, 70, 80, 75, 71),
   },
 ];
 
@@ -174,6 +183,7 @@ export const teams: Team[] = [
     members: [me, users[0], users[1]],
     openRoles: ["Backend Engineer", "Gameplay Dev"],
     stack: ["Next.js", "FastAPI", "OpenAI", "Postgres"], stage: "building",
+    taskStats: { total: 6, done: 2 },
   },
   {
     id: "t2", name: "Mesh Finance",
@@ -181,6 +191,7 @@ export const teams: Team[] = [
     members: [users[4], users[2]],
     openRoles: ["Designer", "Full-stack"],
     stack: ["Node", "React", "Stripe"], stage: "idea",
+    taskStats: { total: 1, done: 0 },
   },
 ];
 

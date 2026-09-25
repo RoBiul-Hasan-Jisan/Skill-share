@@ -28,7 +28,7 @@ const nav = [
   { to: "/teams",       label: "Teams",        icon: Users },
   { to: "/startups",    label: "Startups",     icon: Rocket },
   { to: "/recruiter",   label: "Recruiter",    icon: Briefcase },
-  { to: "/billing",     label: "Billing",      icon: CreditCard },
+  // { to: "/billing",     label: "Billing",      icon: CreditCard },
 ];
 
 const mobileNav = [

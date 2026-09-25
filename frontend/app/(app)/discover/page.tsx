@@ -160,12 +160,16 @@ export default function Discover() {
           </div>
         </div>
       ) : filtered.length === 0 ? (
-        <EmptyState
-          icon={<Sparkles className="h-6 w-6" />}
-          title="No matches with these filters"
-          description="Try widening availability or switching modes."
-          action={<Button variant="outline" onClick={() => setAvail("all")}>Reset filters</Button>}
-        />
+       <EmptyState
+  icon={Sparkles}
+  title="No matches with these filters"
+  description="Try widening availability or switching modes."
+  action={
+    <Button variant="outline" onClick={() => setAvail("all")}>
+      Reset filters
+    </Button>
+  }
+/>
       ) : (
         <>
           {/* Top Match spotlight — the single best result gets a hero treatment */}

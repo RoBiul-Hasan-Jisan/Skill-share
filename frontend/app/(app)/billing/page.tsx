@@ -1,5 +1,25 @@
 "use client";
 
+// Billing is temporarily disabled — nav entry removed in
+// src/layout/app-shell/nav-items.ts and the backend checkout/webhook
+// routes are commented out in backend/src/index.ts. This route is left
+// in place (rather than deleted) so a direct link to /billing doesn't
+// 404, and the original page is preserved below, commented out, to
+// restore quickly when billing comes back.
+
+export default function Billing() {
+  return (
+    <div className="flex min-h-[50vh] flex-col items-center justify-center text-center">
+      <p className="font-display text-lg font-semibold text-white">Billing isn't available right now</p>
+      <p className="mt-1 max-w-sm text-sm text-slate-400">
+        This section is temporarily disabled. Check back soon.
+      </p>
+    </div>
+  );
+}
+
+/* ── Original billing page, preserved for when this is re-enabled ──────────
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check, Zap, CreditCard } from "lucide-react";
@@ -84,3 +104,5 @@ export default function Billing() {
     </div>
   );
 }
+
+── end original billing page ── */

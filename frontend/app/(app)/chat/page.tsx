@@ -7,7 +7,7 @@ import EmojiPicker, { type EmojiClickData, Theme } from "emoji-picker-react";
 import {
   Send, Search, Hash, Users as UsersIcon,
   Check, CheckCheck, Trash2, Info, Circle, Wifi, WifiOff,
-  ChevronLeft, MessageSquare, Eraser, Smile,
+  ChevronLeft, MessageSquare, Eraser, Smile, Code2,
 } from "lucide-react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Avatar } from "@/components/ui/Avatar";
@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { TrustMeter } from "@/components/ui/TrustMeter";
+import { MessageBody } from "@/components/chat/MessageBody";
 import { useChatStore } from "@/store/chatStore";
 import { api } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
@@ -48,6 +49,7 @@ export default function Chat() {
   const typingTimer = useRef<ReturnType<typeof setTimeout>>();
   const deepLinked = useRef(false);
   const emojiRef = useRef<HTMLDivElement>(null);
+  const draftRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => { init(); }, [init]);
 
@@ -109,11 +111,25 @@ export default function Chat() {
     setDraft("");
     setTyping(false);
     setShowEmoji(false);
+    if (draftRef.current) draftRef.current.style.height = "auto";
   };
 
   const onEmojiClick = (emojiData: EmojiClickData) => {
     setDraft((prev) => prev + emojiData.emoji);
     setShowEmoji(false);
+  };
+
+  const insertCodeBlock = () => {
+    const el = draftRef.current;
+    if (!el) { setDraft((prev) => `${prev}\n\`\`\`js\n\n\`\`\`\n`); return; }
+    const start = el.selectionStart ?? draft.length;
+    const end = el.selectionEnd ?? draft.length;
+    const selected = draft.slice(start, end);
+    const fenced = selected ? `\`\`\`js\n${selected}\n\`\`\`` : `\`\`\`js\n\n\`\`\``;
+    const next = draft.slice(0, start) + fenced + draft.slice(end);
+    setDraft(next);
+    const caret = selected ? start + fenced.length : start + 7; // land inside the empty fence
+    requestAnimationFrame(() => { el.focus(); el.setSelectionRange(caret, caret); });
   };
 
   const clearChat = async () => {
@@ -288,25 +304,43 @@ export default function Chat() {
                 )}
               </AnimatePresence>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-end gap-2">
                 <button
                   onClick={() => setShowEmoji((v) => !v)}
                   className={cn(
-                    "rounded-lg p-2 transition",
+                    "shrink-0 rounded-lg p-2 transition",
                     showEmoji ? "bg-neon-cyan/10 text-neon-cyan" : "text-slate-400 hover:bg-white/5 hover:text-neon-cyan",
                   )}
                   title="Emoji"
                 >
                   <Smile className="h-4 w-4" />
                 </button>
-                <input
+                <button
+                  onClick={insertCodeBlock}
+                  className="shrink-0 rounded-lg p-2 text-slate-400 transition hover:bg-white/5 hover:text-neon-cyan"
+                  title="Insert code block"
+                >
+                  <Code2 className="h-4 w-4" />
+                </button>
+                <textarea
+                  ref={draftRef}
                   value={draft}
-                  onChange={(e) => onChange(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && submit()}
-                  placeholder={`Message ${active.kind === "team" ? "#" + active.name : active.name}…`}
-                  className="h-10 flex-1 rounded-xl border border-white/10 bg-white/[0.03] px-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-neon-cyan/50"
+                  onChange={(e) => {
+                    onChange(e.target.value);
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${Math.min(e.target.scrollHeight, 160)}px`;
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      submit();
+                    }
+                  }}
+                  rows={1}
+                  placeholder={`Message ${active.kind === "team" ? "#" + active.name : active.name}… (Shift+Enter for a new line)`}
+                  className="max-h-40 min-h-[40px] flex-1 resize-none rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2.5 text-sm leading-snug text-white outline-none placeholder:text-slate-500 focus:border-neon-cyan/50"
                 />
-                <Button onClick={submit} className="px-3"><Send className="h-4 w-4" /></Button>
+                <Button onClick={submit} className="shrink-0 px-3"><Send className="h-4 w-4" /></Button>
               </div>
             </div>
           </>
@@ -445,7 +479,7 @@ function MessageRow({
                 : "border border-white/10 bg-white/[0.04] text-slate-200",
             )}
           >
-            {msg.text}
+            <MessageBody text={msg.text} />
             {msg.edited && <span className="ml-1.5 text-[10px] opacity-60">(edited)</span>}
             <span className={cn("ml-2 inline-flex items-center gap-1 align-middle text-[10px]", fromMe ? "text-ink-950/60" : "text-slate-500")}>
               {msg.ts}

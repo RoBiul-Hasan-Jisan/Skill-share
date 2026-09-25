@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, Tooltip } from "recharts";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { Endorsements } from "@/components/profile/Endorsements";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
@@ -469,6 +470,8 @@ export default function Profile() {
               )}
             </div>
           </GlassCard>
+
+          <Endorsements userId={me.id} skills={me.skills} canEndorse={false} />
 
           {/* Projects */}
           <GlassCard>

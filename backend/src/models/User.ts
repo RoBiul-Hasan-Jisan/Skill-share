@@ -12,6 +12,7 @@ const TrustBreakdownSchema = new Schema(
     certificates: { type: Number, default: 0 },
     projects: { type: Number, default: 0 },
     activity: { type: Number, default: 0 },
+    endorsements: { type: Number, default: 0 },
   },
   { _id: false },
 );
@@ -65,6 +66,7 @@ const UserSchema = new Schema(
 
     messagesSent: { type: Number, default: 0 },
     teamsJoined: { type: Number, default: 0 },
+    endorsementsCount: { type: Number, default: 0 },
 
     githubStats: {
       repos: { type: Number, default: 0 },

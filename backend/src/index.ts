@@ -5,19 +5,21 @@ import { env } from "./config/env.js";
 import { connectDB } from "./config/db.js";
 import { notFound, errorHandler } from "./middleware/error.js";
 import { initChatSocket } from "./sockets/chat.socket.js";
-import { webhook } from "./controllers/billing.controller.js";
+// Billing temporarily disabled — see routes/billing.routes.ts and app/(app)/billing/page.tsx
+// import { webhook } from "./controllers/billing.controller.js";
 
 import authRoutes from "./routes/auth.routes.js";
 import publicRoutes from "./routes/public.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 import userRoutes from "./routes/user.routes.js";
-import billingRoutes from "./routes/billing.routes.js";
+// import billingRoutes from "./routes/billing.routes.js";
 import teamRoutes from "./routes/team.routes.js";
 import ideaRoutes from "./routes/idea.routes.js";
 import taskRoutes from "./routes/task.routes.js";
 import connectionRoutes from "./routes/connection.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 import projectRoutes from "./routes/project.routes.js";
+import endorsementRoutes from "./routes/endorsement.routes.js";
 
 const app = express();
 const allowedOrigins = [
@@ -34,7 +36,7 @@ app.use(cors({
   credentials: true,
 }));
 
-app.post("/api/billing/webhook", express.raw({ type: "application/json" }), webhook);
+// app.post("/api/billing/webhook", express.raw({ type: "application/json" }), webhook);
 app.use(express.json({ limit: "10mb" }));
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
@@ -46,13 +48,14 @@ app.use("/api/public", publicRoutes);
 // Authenticated routes
 app.use("/api", messageRoutes);
 app.use("/api", userRoutes);
-app.use("/api", billingRoutes);
+// app.use("/api", billingRoutes);
 app.use("/api", teamRoutes);
 app.use("/api", ideaRoutes);
 app.use("/api", taskRoutes);
 app.use("/api", connectionRoutes);
 app.use("/api", notificationRoutes);
 app.use("/api", projectRoutes);
+app.use("/api", endorsementRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

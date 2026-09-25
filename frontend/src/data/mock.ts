@@ -14,15 +14,27 @@ const av = (seed: number) =>
   `https://api.dicebear.com/9.x/glass/svg?seed=devmesh${seed}`;
 
 // Composite trust = weighted sum of sub-scores (see lib/trust.ts for weights).
-const tb = (p: number, g: number, c: number, pr: number, a: number): TrustBreakdown => ({
-  profile: p, github: g, certificates: c, projects: pr, activity: a,
-});
+// Composite trust = weighted sum of sub-scores (see lib/trust.ts for weights).
 
+const tb = (
+  p: number,
+  g: number,
+  c: number,
+  pr: number,
+  a: number,
+  e: number = 0
+): TrustBreakdown => ({
+  profile: p,
+  github: g,
+  certificates: c,
+  projects: pr,
+  activity: a,
+  endorsements: e,
+});
 // Five-axis match breakdown that powers the "Why we match" radar view.
 const mb = (skillOverlap: number, stackOverlap: number, complementary: number, roleFit: number, trust: number) => ({
   skillOverlap, stackOverlap, complementary, roleFit, trust,
 });
-
 export const me: DevUser = {
   id: "u0",
   name: "Aria Chen",

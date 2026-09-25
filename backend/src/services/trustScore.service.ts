@@ -11,11 +11,12 @@ import type { UserDoc } from "../models/User.js";
  */
 
 export const WEIGHTS = {
-  profile: 0.2,
-  github: 0.25,
-  certificates: 0.2,
-  projects: 0.25,
+  profile: 0.15,
+  github: 0.2,
+  certificates: 0.15,
+  projects: 0.2,
   activity: 0.1,
+  endorsements: 0.2,
 } as const;
 
 const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
@@ -57,6 +58,12 @@ function activityScore(u: UserDoc): number {
   return clamp(msgs + teams);
 }
 
+function endorsementsScore(u: UserDoc): number {
+  // Peer-vouched, so it's weighted more heavily than raw activity — but
+  // still diminishing returns so one generous friend can't max it out.
+  return clamp(Math.sqrt(u.endorsementsCount ?? 0) * 22);
+}
+
 export function computeTrustBreakdown(u: UserDoc) {
   return {
     profile: profileScore(u),
@@ -64,6 +71,7 @@ export function computeTrustBreakdown(u: UserDoc) {
     certificates: certificatesScore(u),
     projects: projectsScore(u),
     activity: activityScore(u),
+    endorsements: endorsementsScore(u),
   };
 }
 
@@ -77,7 +85,8 @@ export function computeTrustScore(u: UserDoc): {
       b.github * WEIGHTS.github +
       b.certificates * WEIGHTS.certificates +
       b.projects * WEIGHTS.projects +
-      b.activity * WEIGHTS.activity,
+      b.activity * WEIGHTS.activity +
+      b.endorsements * WEIGHTS.endorsements,
   );
   return { trustScore, trustBreakdown: b };
 }
@@ -98,6 +107,7 @@ export function ruleBasedSuggestions(u: UserDoc): string[] {
   if (b.github < 60) out.push("Connect GitHub to surface repos, commits, and language diversity.");
   if (b.profile < 60) out.push("Complete your bio, role, and availability.");
   if (b.activity < 60) out.push("Join a team and stay active in chats.");
+  if (b.endorsements < 60) out.push("Ask connections to endorse specific skills on your profile.");
   const { trustScore } = computeTrustScore(u);
   if (trustScore < 50)
     out.unshift("Below recruiter visibility threshold — prioritize projects and certificates.");

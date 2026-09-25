@@ -11,7 +11,8 @@ export const navItems = [
   { to: "/teams",       label: "Teams",         icon: Users },
   { to: "/startups",    label: "Startups",      icon: Rocket },
   { to: "/recruiter",   label: "Recruiter",     icon: Briefcase },
-  { to: "/billing",     label: "Billing",       icon: CreditCard },
+  // Billing temporarily disabled — see billing/page.tsx and backend/src/index.ts
+  // { to: "/billing",     label: "Billing",       icon: CreditCard },
 ];
 
 export const mobileNavItems = [

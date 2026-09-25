@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Search, Bell, X, MapPin, Sun, Moon, Command, MoreHorizontal,
-  UserPlus, Check, MessageCircle, Rocket, LogOut,
+  UserPlus, Check, MessageCircle, Rocket, LogOut, Award,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { Avatar } from "@/components/ui/Avatar";
@@ -26,6 +26,7 @@ function notifIcon(type: string) {
     case "connection_accepted": return <Check className="h-4 w-4 text-neon-lime" />;
     case "message": return <MessageCircle className="h-4 w-4 text-neon-magenta" />;
     case "application": return <Rocket className="h-4 w-4 text-neon-magenta" />;
+    case "endorsement": return <Award className="h-4 w-4 text-neon-cyan" />;
     default: return <Bell className="h-4 w-4 text-slate-400" />;
   }
 }
@@ -134,6 +135,7 @@ export function Header({ unreadChat, bumpUnreadChat }: { unreadChat: number; bum
     if (n.type === "connection_request" || n.type === "connection_accepted") router.push("/discover");
     else if (n.type === "message") router.push("/chat");
     else if (n.type === "application") router.push("/startups");
+    else if (n.type === "endorsement") router.push("/profile");
   };
 
   const handleAcceptConnection = async (n: AppNotification) => {
@@ -342,7 +344,7 @@ export function Header({ unreadChat, bumpUnreadChat }: { unreadChat: number; bum
         </div>
 
         {/* More — covers the nav items that don't fit the mobile bottom bar
-            (Startups, Recruiter, Billing) plus theme/logout on small screens.
+            (Startups, Recruiter) plus theme/logout on small screens.
             This is the entire concession to "overflow"; there is no drawer. */}
         <div className="relative shrink-0 lg:hidden" ref={moreRef}>
           <button onClick={() => setMoreOpen((v) => !v)} className="grid h-9 w-9 place-items-center rounded border border-white/10 text-slate-300 hover:border-white/20 hover:text-white">

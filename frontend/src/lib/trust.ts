@@ -3,11 +3,12 @@ import type { DevUser, TrustBreakdown } from "@/types";
 // Weights mirror the server-side service (server/src/services/trustScore.service.ts).
 // Keeping them here lets the UI preview/explain scores without a round-trip.
 export const TRUST_WEIGHTS = {
-  profile: 0.2,
-  github: 0.25,
-  certificates: 0.2,
-  projects: 0.25,
+  profile: 0.15,
+  github: 0.2,
+  certificates: 0.15,
+  projects: 0.2,
   activity: 0.1,
+  endorsements: 0.2,
 } as const;
 
 export const TRUST_LABELS: Record<keyof TrustBreakdown, string> = {
@@ -16,6 +17,7 @@ export const TRUST_LABELS: Record<keyof TrustBreakdown, string> = {
   certificates: "Certificates",
   projects: "Projects",
   activity: "Activity",
+  endorsements: "Endorsements",
 };
 
 /** Composite 0–100 from sub-scores. Authoritative copy lives server-side. */

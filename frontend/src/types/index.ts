@@ -14,6 +14,15 @@ export interface TrustBreakdown {
   certificates: number;
   projects: number;
   activity: number;
+  endorsements: number;
+}
+
+export interface Endorsement {
+  id: string;
+  from: { id: string; name: string; handle: string; avatar?: string; role?: string };
+  skill: string;
+  note?: string;
+  createdAt: string;
 }
 
 export interface Certificate {
@@ -164,7 +173,7 @@ export interface ActivityPoint {
 
 export interface AppNotification {
   id: string;
-  type: "connection_request" | "connection_accepted" | "message" | "invite" | "application" | "system";
+  type: "connection_request" | "connection_accepted" | "message" | "invite" | "application" | "endorsement" | "system";
   message: string;
   read: boolean;
   fromId?: string;

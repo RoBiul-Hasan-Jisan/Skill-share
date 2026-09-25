@@ -1,7 +1,7 @@
 import type {
   DevUser, MatchSuggestion, MatchBreakdown, Team, StartupIdea, Task,
   ChatRoom, ChatMessage, ActivityPoint, Project, Certificate,
-  AppNotification, ConnectionItem,
+  AppNotification, ConnectionItem, Endorsement,
 } from "@/types";
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "/api";
@@ -205,6 +205,23 @@ function normalizeProject(p: Record<string, any>): Project {
     repoUrl: p.repoUrl,
     liveUrl: p.liveUrl,
     image: p.image,
+  };
+}
+
+function normalizeEndorsement(e: Record<string, any>): Endorsement {
+  const from = e.from ?? {};
+  return {
+    id: String(e._id ?? e.id),
+    from: {
+      id: String(from._id ?? from.id ?? ""),
+      name: from.name ?? "Unknown",
+      handle: from.handle ?? "",
+      avatar: from.avatar,
+      role: from.role,
+    },
+    skill: e.skill,
+    note: e.note,
+    createdAt: e.createdAt,
   };
 }
 
@@ -458,6 +475,24 @@ export const api = {
 
   removeConnection: async (userId: string) => {
     return apiFetch<{ ok: boolean }>(`/connections/${userId}`, { method: "DELETE" });
+  },
+
+  // Endorsements
+  listEndorsements: async (userId: string): Promise<Endorsement[]> => {
+    const { endorsements } = await apiFetch<{ endorsements: any[] }>(`/users/${userId}/endorsements`);
+    return endorsements.map(normalizeEndorsement);
+  },
+
+  endorseSkill: async (userId: string, skill: string, note?: string): Promise<Endorsement> => {
+    const { endorsement } = await apiFetch<{ endorsement: any }>(`/users/${userId}/endorsements`, {
+      method: "POST",
+      body: JSON.stringify({ skill, note }),
+    });
+    return normalizeEndorsement(endorsement);
+  },
+
+  retractEndorsement: async (endorsementId: string) => {
+    return apiFetch<{ ok: boolean }>(`/endorsements/${endorsementId}`, { method: "DELETE" });
   },
 
   // Notifications
